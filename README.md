@@ -1,24 +1,26 @@
-# vue_music
+## 技术选型
 
-## Project setup
-```
-yarn install
-```
+1. 前端数据展现/交互/组件化
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+   - vue全家桶
+   - [iview](http://iview.talkingdata.com/)
 
-### Compiles and minifies for production
-```
-yarn build
-```
+2. 后台（API）
 
-### Lints and fixes files
-```
-yarn lint
-```
+   使用开源项目[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)对接。
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+3. 前后端交互
+
+   使用Axios发送Ajax请求
+
+4. 模块化
+
+   - ES6
+   - CommentJS
+
+## 前端路由
+
+- 2020-11-23暂定
+
+  ![image-20201123173227997](https://rmt.dogedoge.com/fetch/tzk/storage/20201123173228.png?w=1280&fmt=jpg)
+
