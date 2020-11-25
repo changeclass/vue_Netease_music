@@ -9,6 +9,7 @@ export default function ajax (url, data = {}, method = 'GET') {
   return new Promise((resolve, reject) => {
     let promise
     // 1. 执行异步请求
+
     if (method === 'GET') {
       promise = axios.get(url, {
         params: data
@@ -19,6 +20,7 @@ export default function ajax (url, data = {}, method = 'GET') {
     promise
       .then(response => {
         // 2. 成功调用resolve
+
         resolve(response.data)
       })
       .catch(error => {

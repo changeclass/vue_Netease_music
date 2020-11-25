@@ -22,18 +22,25 @@ export default {
 
 <style lang='scss'>
 .ivu-layout {
-  height: 100%;
+  // height: 100%;
   header {
     background: var(--theme_color);
     height: 72px;
   }
   .content {
     width: 100%;
+    // height: 9999px;
     height: 100%;
-    overflow: hidden;
+    margin-bottom: 100px;
+    // overflow: hidden;
   }
-  .footer {
-    height: 100px;
-  }
+}
+footer {
+  // height: 100px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background: white;
+  z-index: 999;
 }
 </style>

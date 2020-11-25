@@ -22,7 +22,11 @@ import {
   CarouselItem,
   Card,
   Row,
-  Col
+  Col,
+  List,
+  Drawer,
+  Spin
+
 } from 'view-design'
 Vue.component('Button', Button)
 Vue.component('Table', Table)
@@ -46,4 +50,8 @@ Vue.component('Card', Card)
 Vue.component('Row', Row)
 Vue.component('i-col', Col)
 Vue.component('i-table', Table)
+Vue.component('List', List)
+Vue.component('ListItem', List.Item)
+Vue.component('Drawer', Drawer)
 Vue.prototype.$Message = Message
+Vue.prototype.$Spin = Spin

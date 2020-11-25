@@ -5,7 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: {}
+    user: {},
+    music: [],
+    index: 0
   },
   mutations: {
     setUser (state, user) {
@@ -13,6 +15,12 @@ export default new Vuex.Store({
     },
     clearUser (state) {
       state.user = {}
+    },
+    setMusic (state, musciList) {
+      state.music = musciList
+    },
+    setIndex (state, newIndex) {
+      state.index = newIndex
     }
   },
   actions: {

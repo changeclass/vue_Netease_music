@@ -51,7 +51,9 @@ export default {
       if (code === 200) {
         const result = await reqDailyMusic()
         if (result.code === 200) {
-          this.personalized = result.recommend
+          this.personalized = result.recommend.splice(0, 10)
+          // this.personalized = result.recommend
+          console.log(result.recommend)
         } else {
           this.$Message.error('歌单获取失败')
         }

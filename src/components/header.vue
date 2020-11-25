@@ -4,7 +4,16 @@
       <a href="/"><img :src="img_src" alt="" /></a>
     </h1>
 
-    <Button shape="circle" icon="ios-arrow-back" type="error"></Button>
+    <Button
+      shape="circle"
+      icon="ios-arrow-back"
+      type="error"
+      @click="
+        () => {
+          $route.go(-1)
+        }
+      "
+    ></Button>
     <Button shape="circle" icon="ios-arrow-forward" type="error"></Button>
     <div style="width: 190px">
       <Input search placeholder="Enter something..." />

@@ -1,7 +1,7 @@
 <template>
   <!-- 歌单页面 -->
   <div>
-    {{ $route.params.id }}
+    <div @click="playAll">{{ $route.params.id }}</div>
     <i-table :columns="columns" :data="musicList" ellipsis height="600">
       <template slot-scope="{ row }" slot="singal">
         {{ row.ar[0].name }}
@@ -43,6 +43,7 @@ export default {
     }
   },
   methods: {
+    // 初始化列表
     async initList () {
       const listId = this.$route.params.id
       const result = await reqMusicListDetail(listId) // 获取歌单详情
@@ -52,10 +53,16 @@ export default {
       for (const item of trackIds) {
         ids.push(item.id)
       }
-      console.log(ids.toString())
+      this.$Spin.show()
       const musicLists = await reqMusicDetail(ids.toString())
-      console.log(musicLists)
+      this.$Spin.hide()
       this.musicList = musicLists.songs
+    },
+    // 播放全部
+    playAll () {
+      // 将列表内的音乐加入到state中
+      this.$store.commit('setMusic', this.musicList)
+      console.log(this.musicList)
     }
   }
 }
