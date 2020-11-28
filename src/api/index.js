@@ -22,11 +22,13 @@ export const reqPersonalized = () => ajax(BASE + '/personalized?limit=10', 'post
 export const reqDailyMusic = () => ajax(BASE + '/recommend/resource', 'post')
 
 // 获得歌单详情
-export const reqMusicListDetail = (id) => ajax(BASE + '/playlist/detail?timestamp=' + date.getTime(), { id }, 'post')
+export const reqMusicListDetail = (id, time) => ajax(BASE + '/playlist/detail?timestamp=' + time, { id }, 'post')
 // 获得歌曲详情
-export const reqMusicDetail = (ids) => ajax(BASE + '/song/detail', { ids }, 'post')
+export const reqMusicDetail = (ids, time) => ajax(BASE + '/song/detail?timestamp=' + time, { ids }, 'post')
 // 获得歌曲播放地址
 export const reqMusicUrl = (id, time) => ajax(BASE + '/song/url?timestamp=' + time, { id }, 'post')
+// 获得歌曲的歌词
+export const reqGetLyric = (id) => ajax(BASE + '/lyric', { id }, 'post')
 
 // 我的云盘信息
 export const reqCloud = () => ajax(BASE + '/user/cloud', 'post')

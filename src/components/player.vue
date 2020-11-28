@@ -37,6 +37,7 @@
           v-model="music.currentTime"
           :max="music.duration"
           :marks="music.time"
+          :tip-format="formatSecond"
           @on-change="changeCurrentTime"
         ></Slider>
       </div>
@@ -49,7 +50,7 @@
         <Slider
           v-model="music.voice"
           :step="0.1"
-          :tip-format="hideFormat"
+          :tip-format="music.hideFormat"
           :min="0"
           :max="1"
           @on-input="changeVoice"
@@ -165,6 +166,9 @@ export default {
       this.music.url = ''
       const date = new Date()
       const result = await reqMusicUrl(this.musicObj.id, date.getTime())
+      console.log(result)
+      // 将请求结果保存在vuex中
+      this.$store.commit('setMusicObj', result)
       this.music.play = false
       const { url } = result.data[0]
       this.music.url = url
@@ -172,15 +176,16 @@ export default {
   },
   filters: {
     // 将整数转化成时分秒
-    formatSecond (second = 0) {
-      return realFormatSecond(second)
-    }
+
   },
 
   methods: {
     // 隐藏滑块的提示
     hideFormat () {
       return null
+    },
+    formatSecond (second = 0) {
+      return realFormatSecond(second)
     },
     // 显示歌单列表
     onShowList () {

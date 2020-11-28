@@ -25,8 +25,9 @@ import {
   Col,
   List,
   Drawer,
-  Spin
-
+  Spin,
+  Tag,
+  Poptip
 } from 'view-design'
 Vue.component('Button', Button)
 Vue.component('Table', Table)
@@ -53,5 +54,7 @@ Vue.component('i-table', Table)
 Vue.component('List', List)
 Vue.component('ListItem', List.Item)
 Vue.component('Drawer', Drawer)
+Vue.component('Tag', Tag)
+Vue.component('Poptip', Poptip)
 Vue.prototype.$Message = Message
 Vue.prototype.$Spin = Spin

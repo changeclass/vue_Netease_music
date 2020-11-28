@@ -6,7 +6,7 @@
 
 <style>
 #app {
-  --theme_color: rgba(236, 65, 65, 0.9);
+  --theme_color: rgba(236, 65, 65, 1);
   --font_color: #333;
 }
 </style>

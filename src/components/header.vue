@@ -8,13 +8,14 @@
       shape="circle"
       icon="ios-arrow-back"
       type="error"
-      @click="
-        () => {
-          $route.go(-1)
-        }
-      "
+      @click="go(-1)"
     ></Button>
-    <Button shape="circle" icon="ios-arrow-forward" type="error"></Button>
+    <Button
+      shape="circle"
+      icon="ios-arrow-forward"
+      type="error"
+      @click="go(1)"
+    ></Button>
     <div style="width: 190px">
       <Input search placeholder="Enter something..." />
     </div>
@@ -25,12 +26,64 @@
         justify-content: center;
         width: 1024px;
       "
+      class="user"
       v-if="user.userId !== 0 && user.userId !== undefined"
-      @click="userLogout"
     >
-      <Avatar :src="user.avatarUrl" />
-      <span style="color: white">{{ user.nickname }}</span>
-      <Icon type="ios-arrow-down" color="white" />
+      <Poptip title="Title" content="content">
+        <Avatar :src="user.avatarUrl" />
+        <span style="color: white">{{ user.nickname }}</span>
+        <Icon type="ios-arrow-down" color="white" />
+        <div slot="title" class="title">
+          <div class="info">
+            <p class="number">2</p>
+            <p>动态</p>
+          </div>
+          <div class="info">
+            <p class="number">2</p>
+            <p>关注</p>
+          </div>
+          <div class="info">
+            <p class="number">2</p>
+            <p>粉丝</p>
+          </div>
+          <div class="btn"><Button>Default</Button></div>
+        </div>
+
+        <div slot="content" class="content">
+          <List :split="false">
+            <ListItem>
+              <Icon type="md-star" />
+              <span style="width: 100%">我的会员</span>
+              <Icon type="ios-arrow-forward" class="right" />
+            </ListItem>
+            <ListItem>
+              <Icon type="md-star" />
+              <span style="width: 100%">等级</span>
+              <Icon type="ios-arrow-forward" class="right"
+            /></ListItem>
+            <ListItem>
+              <Icon type="md-star" />
+              <span style="width: 100%">商城</span>
+              <Icon type="ios-arrow-forward" class="right" />
+            </ListItem>
+            <ListItem>
+              <Icon type="md-star" />
+              <span style="width: 100%">个人信息设置</span>
+              <Icon type="ios-arrow-forward" class="right" />
+            </ListItem>
+            <ListItem>
+              <Icon type="md-star" />
+              <span style="width: 100%">绑定社交账号</span>
+              <Icon type="ios-arrow-forward" class="right" />
+            </ListItem>
+            <ListItem>
+              <Icon type="md-power" />
+              <span style="width: 100%" @click="userLogout">退出登录</span>
+              <Icon type="ios-arrow-forward" class="right" />
+            </ListItem>
+          </List>
+        </div>
+      </Poptip>
     </div>
     <div
       v-else
@@ -153,6 +206,9 @@ export default {
         this.$store.commit('clearUser')
         this.user = {}
       }
+    },
+    go (value) {
+      this.$router.go(value)
     }
   }
 }
@@ -183,6 +239,51 @@ $height: 72px;
 
     .ivu-modal {
       top: 0;
+    }
+  }
+  .user {
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      .info {
+        width: 33.33%;
+        text-align: center;
+        .number {
+          font-size: 21px;
+          font-weight: bold;
+          color: black;
+        }
+      }
+    }
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .content {
+      .right {
+        &::before {
+          position: relative;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+.ivu-poptip-inner {
+  .ivu-poptip-body {
+    padding: 0 !important;
+    .ivu-list-item {
+      padding: 8px 0;
+      &:hover {
+        background-color: rgb(240, 241, 243);
+        cursor: pointer;
+      }
+    }
+    .content {
+      margin-bottom: 0;
     }
   }
 }

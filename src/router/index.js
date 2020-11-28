@@ -6,16 +6,18 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/home/discover/personal'
   },
   {
     path: '/home',
     name: 'Home',
     component: () => import(/* webpackChunkName: "home" */ '../views/home/home.vue'),
+    redirect: '/home/discover/personal',
     children: [
       {
         path: '/home/discover',
         name: 'Discover',
+        redirect: '/home/discover/personal',
         component: () => import(/* webpackChunkName: "home" */ '../views/home/discover.vue'),
         // 子路由
         children: [
