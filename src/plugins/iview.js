@@ -24,10 +24,15 @@ import {
   Row,
   Col,
   List,
+
   Drawer,
   Spin,
   Tag,
-  Poptip
+  Poptip,
+  Tabs,
+  TabPane,
+  Time,
+  Page
 } from 'view-design'
 Vue.component('Button', Button)
 Vue.component('Table', Table)
@@ -53,8 +58,13 @@ Vue.component('i-col', Col)
 Vue.component('i-table', Table)
 Vue.component('List', List)
 Vue.component('ListItem', List.Item)
+Vue.component('ListItemMeta', List.Item.Meta)
 Vue.component('Drawer', Drawer)
 Vue.component('Tag', Tag)
 Vue.component('Poptip', Poptip)
+Vue.component('Tabs', Tabs)
+Vue.component('TabPane', TabPane)
+Vue.component('Time', Time)
+Vue.component('Page', Page)
 Vue.prototype.$Message = Message
 Vue.prototype.$Spin = Spin

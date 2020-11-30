@@ -172,6 +172,7 @@ export default {
       this.music.play = false
       const { url } = result.data[0]
       this.music.url = url
+      this.test()
     }
   },
   filters: {
@@ -183,6 +184,9 @@ export default {
     // 隐藏滑块的提示
     hideFormat () {
       return null
+    },
+    test () {
+      console.log('test')
     },
     formatSecond (second = 0) {
       return realFormatSecond(second)

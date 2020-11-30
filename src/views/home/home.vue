@@ -32,7 +32,7 @@ export default {
     // height: 9999px;
     height: 100%;
     margin-bottom: 100px;
-    // overflow: hidden;
+    overflow: hidden;
   }
 }
 footer {

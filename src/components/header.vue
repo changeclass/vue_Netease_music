@@ -29,24 +29,30 @@
       class="user"
       v-if="user.userId !== 0 && user.userId !== undefined"
     >
-      <Poptip title="Title" content="content">
+      <Poptip title="Title" content="content" @on-popper-show="showPopper">
         <Avatar :src="user.avatarUrl" />
         <span style="color: white">{{ user.nickname }}</span>
         <Icon type="ios-arrow-down" color="white" />
         <div slot="title" class="title">
           <div class="info">
-            <p class="number">2</p>
+            <p class="number">{{ user.eventCount }}</p>
             <p>动态</p>
           </div>
           <div class="info">
-            <p class="number">2</p>
+            <p class="number">{{ user.followeds }}</p>
             <p>关注</p>
           </div>
           <div class="info">
-            <p class="number">2</p>
+            <p class="number">{{ user.follows }}</p>
             <p>粉丝</p>
           </div>
-          <div class="btn"><Button>Default</Button></div>
+          <div class="btn">
+            <Button
+              @click="userSingin"
+              :disabled="user.userSign ? true : false"
+              >{{ user.userSign ? '已签到' : '签到' }}</Button
+            >
+          </div>
         </div>
 
         <div slot="content" class="content">
@@ -126,14 +132,14 @@
 
 <script>
 import logo from '../assets/image/logo.png'
-import { reqLoginByPhone, reqLoginStatus, reqLogout } from '../api'
+import { reqLoginByPhone, reqLoginStatus, reqLogout, reqUserDetail, reqUserSignin } from '../api'
 
 export default {
   data () {
     return {
       userLogin: {
-        phone: '18630257257',
-        password: '5296306...'
+        phone: '',
+        password: ''
       },
 
       // 表单验证规则
@@ -153,7 +159,11 @@ export default {
         djStatus: '',
         nickname: '',
         userId: 0,
-        userType: ''
+        userType: '',
+        followeds: 0,
+        follows: 0,
+        eventCount: 0,
+        userSign: false
       }
     }
   },
@@ -170,14 +180,43 @@ export default {
     userLoginModal () {
       this.login = !this.login
     },
+    async showPopper () {
+      console.log(this.user.userId, 1)
+      const result = await reqUserDetail(this.user.userId)
+      const { mobileSign } = result
+      const { followeds, follows, eventCount } = result.profile
+      this.user = { ...this.user, followeds, follows, eventCount, userSign: mobileSign }
+      // this.user.followeds = followeds
+      // this.user.follows = follows
+      // this.user.eventCount = eventCount
+      // this.user.userSign = mobileSign
+    },
+    async userSingin () {
+      console.log(this.user.pcSign, this.user.mobileSign)
+      const mobileResult = await reqUserSignin()
+      console.log(mobileResult)
+    },
     async getUser () {
       const s = await reqLoginStatus()
       if (s.code === 200) {
         this.$store.commit('setUser', s.profile)
         this.initUser(this.$store.state.user)
+
+        // this.getUserDetail(s.profile.userId)
       } else {
         console.log(1)
       }
+    },
+    async getUserDetail (userId) {
+      const result = await reqUserDetail(userId)
+      const { mobileSign } = result
+      const { followeds, follows, eventCount } = result.profile
+
+      this.user.followeds = followeds
+      this.user.follows = follows
+      this.user.eventCount = eventCount
+      this.userSign = mobileSign
+      console.log(result)
     },
     ok () {
       const { loginForm } = this.$refs

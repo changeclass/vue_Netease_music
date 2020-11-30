@@ -35,24 +35,116 @@
         <p>简介：{{ playListInfo.description }}</p>
       </div>
     </div>
-    <i-table :columns="columns" :data="musicList" ellipsis height="600">
-      <template slot-scope="{ row }" slot="singal">
-        {{ row.ar[0].name }}
-      </template>
-      <template slot-scope="{ row }" slot="album">
-        {{ row.al.name }}
-      </template>
-    </i-table>
+    <Tabs :animated="false">
+      <TabPane label="歌曲列表">
+        <i-table :columns="columns" :data="musicList" ellipsis>
+          <template slot-scope="{ row }" slot="singal">
+            {{ row.ar[0].name }}
+          </template>
+          <template slot-scope="{ row }" slot="album">
+            {{ row.al.name }}
+          </template>
+        </i-table></TabPane
+      >
+      <TabPane label="评论" style="padding: 20px"
+        ><Input
+          size="large"
+          type="textarea"
+          v-model="comment"
+          placeholder="请输入评论。。。"
+          :maxlength="140"
+          show-word-limit
+        /><Button shape="circle" style="text-aligin: right" @click="sendComment"
+          >Circle</Button
+        >
+        <div class="comments">
+          <h3>最新评论({{ total }})</h3>
+          <div
+            class="comment"
+            v-for="item in commentList"
+            :key="item.commentId"
+          >
+            <div class="user_img">
+              <img :src="item.user.avatarUrl" />
+            </div>
+            <div class="user_text">
+              <a href="http://www.baidu.com" target="_blank"
+                >{{ item.user.nickname }}:</a
+              >
+              <span>{{ item.content }}</span>
+              <!-- <p class="reply">哈哈哈</p> -->
+              <p>
+                <span><Time :time="item.time" type="datetime" /></span>
+                <span style="float: right">
+                  <span>
+                    <a @click="listCommentLike(item)">
+                      <Icon
+                        :type="
+                          item.liked ? 'ios-thumbs-up' : 'ios-thumbs-up-outline'
+                        "
+                      />({{ item.likedCount }}) </a
+                    >| <a><Icon type="ios-text-outline" /></a> |
+                    <a @click="delComment(item.commentId)"
+                      ><Icon type="ios-share-alt-outline"
+                    /></a>
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+          <Page
+            :total="total"
+            @on-change="pageChange"
+            :current.sync="page"
+            :styles="{ textAlign: 'center' }"
+          />
+        </div>
+      </TabPane>
+      <TabPane label="收藏者">
+        <div class="collectors">
+          <div
+            class="collector"
+            v-for="item in collectorList"
+            :key="item.userId"
+          >
+            <div class="image">
+              <img
+                :src="item.avatarUrl"
+                style="width: 80px; border-radius: 50%"
+              />
+            </div>
+            <div class="text">
+              <p>
+                {{ item.nickname
+                }}<Icon
+                  :type="item.gender == 1 ? 'ios-male' : 'ios-female'"
+                  :color="
+                    item.gender == 1
+                      ? 'rgb(38, 166, 228)'
+                      : 'rgb(255, 181, 211)'
+                  "
+                  size="20"
+                  style="font-weight: bold"
+                />
+              </p>
+              <p>{{ item.signature }}</p>
+            </div>
+          </div>
+        </div>
+      </TabPane>
+    </Tabs>
   </div>
 </template>
 
 <script>
 
-import { reqMusicListDetail, reqMusicDetail } from '../../api'
+import { reqMusicListDetail, reqMusicDetail, reqGetListComment, reqCommentLike, reqSendComment, reqGetListSubscribers } from '../../api'
 export default {
 
   created () {
     this.initList()
+    this.initComments()
+    this.initcollectors()
   },
   data () {
     return {
@@ -78,6 +170,7 @@ export default {
       playListInfo: {
         coverImgUrl: '',
         name: '',
+        id: 0,
         creator: {
           nickname: '',
           avatarUrl: '',
@@ -87,7 +180,15 @@ export default {
         trackCount: 0,
         playCount: 0,
         description: ''
-      }
+      },
+      comment: '',
+      commentList: [],
+      total: 0,
+      // 评论当前页码
+      page: 1,
+      collectorList: [],
+      collectorTotal: 0,
+      collectorPage: 1
     }
   },
   filters: {
@@ -103,6 +204,15 @@ export default {
         }
         return tags
       }
+    },
+    formatTime: function (time) {
+      const date = new Date(time)
+      const year = date.getFullYear()
+      const mon = date.getMonth() + 1
+      const day = date.getDate()
+      const hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+      const minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      return `${year}-${mon}-${day} ${hour}:${minute}`
     }
   },
   methods: {
@@ -126,21 +236,87 @@ export default {
       this.musicList = musicLists.songs
     },
     initListInfo (playlist) {
-      console.log('playList:', playlist)
+      console.log(playlist)
       this.playListInfo.coverImgUrl = playlist.coverImgUrl
       this.playListInfo.name = playlist.name
       this.playListInfo.tags = playlist.tags
+      this.playListInfo.id = playlist.id
       this.playListInfo.trackCount = playlist.trackCount
       this.playListInfo.playCount = playlist.playCount
       this.playListInfo.description = playlist.description
       this.playListInfo.creator.nickname = playlist.creator.nickname
       this.playListInfo.creator.avatarUrl = playlist.creator.avatarUrl
     },
+    initComments () {
+      this.getComment(0)
+    },
+    initcollectors () {
+      this.getCollector(0)
+    },
+    async getComment (offset) {
+      const date = new Date()
+      const id = this.$route.params.id
+      const result = await reqGetListComment({ id, offset }, date.getTime())
+      console.log(result)
+      this.commentList = result.comments
+      this.total = result.total
+    },
+    // 获取收藏者
+    async getCollector (offset) {
+      const id = this.$route.params.id
+      const result = await reqGetListSubscribers({ id, offset, limit: 300 })
+      this.collectorTotal = result.total
+      this.collectorList = result.subscribers
+
+      console.log(result)
+    },
     // 播放全部
     playAll () {
       // 将列表内的音乐加入到state中
       this.$store.commit('setMusic', this.musicList)
       console.log(this.musicList)
+    },
+    // 歌单评论喜欢
+    async listCommentLike (item) {
+      const { commentId: cid, liked } = item
+      const id = this.playListInfo.id
+      const t = liked ? 0 : 1
+      const type = 2
+
+      const result = await reqCommentLike({ id, cid, t, type })
+      console.log(result)
+    },
+    // 发表评论
+    async sendComment () {
+      const date = new Date()
+      const t = 1
+      const type = 2
+      const id = this.playListInfo.id
+      const content = this.comment
+      const result = await reqSendComment({ t, type, id, content }, date.getTime())
+      if (result.code === 200) {
+        this.$Message.success('发表成功！')
+        this.comment = ''
+        this.getComment((this.page - 1) * 20)
+      }
+    },
+    async delComment (commentId) {
+      const date = new Date()
+      const t = 0
+      const type = 2
+      const id = this.playListInfo.id
+      const result = await reqSendComment({ t, type, id, commentId }, date.getTime())
+      console.log(result)
+      if (result.code === 200) {
+        this.$Message.success('删除成功！')
+
+        this.getComment((this.page - 1) * 20)
+      }
+    },
+    // 翻页
+    pageChange (page) {
+      console.log('翻页了！', page)
+      this.getComment((page - 1) * 20)
     }
   }
 }
@@ -169,6 +345,56 @@ export default {
           margin: 20px;
         }
       }
+    }
+  }
+}
+.ivu-table-overflowY {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.ivu-list-item-action {
+  text-align: right;
+}
+.comments {
+  .comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    &:hover {
+      background: rgb(244, 244, 244);
+    }
+    .user_text {
+      width: 100%;
+      .reply {
+        background: rgb(244, 244, 244);
+      }
+    }
+    .user_img {
+      margin-right: 10px;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+  }
+}
+.collectors {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .collector {
+    width: 30%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    .image {
+      width: 25%;
+    }
+    .text {
+      width: 50%;
     }
   }
 }
