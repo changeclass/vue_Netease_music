@@ -8,7 +8,8 @@ export default new Vuex.Store({
     user: {},
     music: [],
     index: 0,
-    musicObj: {}
+    musicObj: {},
+    musicTime: 0
   },
   mutations: {
     setUser (state, user) {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     setMusicObj (state, newMusicObj) {
       state.musicObj = newMusicObj
+    },
+    setMusicTime (state, newmusicTime) {
+      state.musicTime = newmusicTime
     }
   },
   actions: {

@@ -1,5 +1,6 @@
 <template>
   <div class="player">
+    <!-- <div class="detail"></div> -->
     <audio
       :src="music.url"
       ref="audio"
@@ -9,7 +10,10 @@
       @loadedmetadata="onLoadedmetadata"
     ></audio>
     <div class="left_party">
-      <img :src="musicObj.al ? musicObj.al.picUrl : ''" alt="" />
+      <router-link :to="{ name: 'music', params: { audio: $refs.audio } }"
+        ><img :src="musicObj.al ? musicObj.al.picUrl : ''" alt=""
+      /></router-link>
+      <!-- <img :src="musicObj.al ? musicObj.al.picUrl : ''" alt="" /> -->
       <div class="info">
         <p>{{ musicObj.name }}</p>
         <p>{{ musicObj.al ? musicObj.al.name : '' }}</p>
@@ -85,6 +89,7 @@
 </template>
 
 <script>
+
 import { reqMusicUrl } from '../api'
 // 将整数转换成 时：分：秒的格式
 function realFormatSecond (second) {
@@ -174,6 +179,7 @@ export default {
       this.music.url = url
       this.test()
     }
+
   },
   filters: {
     // 将整数转化成时分秒
@@ -230,6 +236,7 @@ export default {
     // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
     onTimeupdate (res) {
       this.music.currentTime = res.target.currentTime
+      this.$store.commit('setMusicTime', res.target.currentTime)
       this.music.time[0] = realFormatSecond(res.target.currentTime)
     },
     // 当加载语音流元数据完成后，会触发该事件的回调函数
@@ -259,6 +266,11 @@ export default {
   height: 80px;
   display: flex;
   justify-content: space-between;
+  .detail {
+    width: 100%;
+    height: 1000px;
+    background: red;
+  }
   img {
     width: 60px;
     border-radius: 2px;
