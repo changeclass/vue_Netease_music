@@ -318,6 +318,16 @@ export default {
       console.log('翻页了！', page)
       this.getComment((page - 1) * 20)
     }
+  },
+  watch: {
+    $route (to, from, next) {
+      console.log(to, from, 1)
+      if (to.name === 'musicList') {
+        this.initList()
+        this.initComments()
+        this.initcollectors()
+      }
+    }
   }
 }
 </script>

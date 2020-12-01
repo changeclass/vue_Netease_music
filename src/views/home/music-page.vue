@@ -67,9 +67,12 @@ export default {
   },
   methods: {
     async getLyc () {
+      this.marginTop = 0
+      this.lyrics = []
+      this.times = []
+      const date = new Date()
       const id = this.music.id
-      const result = await reqGetLyric(id)
-      this.lyric = result.lrc.lyric.split('\n')
+      const result = await reqGetLyric(id, date.getTime())
       const array = result.lrc.lyric.split('\n')
       // console.log(this.lyric)
       // 正则表达式匹配内容
@@ -91,7 +94,7 @@ export default {
         time = realFormatSecond(time)
         this.times.push(time)
       })
-      console.log(this.times)
+
       // console.log(this.lyrics)
     },
     test () {
@@ -108,8 +111,13 @@ export default {
   },
   computed: mapState({
     index: 'index',
-    music: (state) => state.music[state.index],
+    music: (state) => {
+      const music = state.music[state.index]
+      // this.getLyc()
+      return music
+    },
     audio: function () {
+      // this.getLyc()
       return this.$route.params.audio
     },
     currentTime: function (state) {
@@ -117,11 +125,17 @@ export default {
       var index = this.currentIndex(time)
       if (index !== -1) {
         this.currentindex = index
-        if (index <= 2) return
+        if (index <= 5) return
         this.marginTop = (-index + 2) * 80
       }
     }
-  })
+  }),
+  watch: {
+    index (i) {
+      console.log(i)
+      this.getLyc()
+    }
+  }
 
 }
 </script>
@@ -161,7 +175,7 @@ export default {
         // overflow-y: scroll;
         width: 100%;
         height: 100%;
-        // padding-top: 150px;
+        transition: all 1s linear;
         .lyric-container::-webkit-scrollbar {
           display: none;
         }

@@ -28,7 +28,7 @@ export const reqMusicDetail = (ids, time) => ajax(BASE + '/song/detail?timestamp
 // 获得歌曲播放地址
 export const reqMusicUrl = (id, time) => ajax(BASE + '/song/url?timestamp=' + time, { id }, 'post')
 // 获得歌曲的歌词
-export const reqGetLyric = (id) => ajax(BASE + '/lyric', { id }, 'post')
+export const reqGetLyric = (id, time) => ajax(BASE + '/lyric?timestamp=' + time, { id }, 'post')
 // 获得歌单的评论
 export const reqGetListComment = (obj, time) => ajax(BASE + '/comment/playlist?timestamp=' + time, obj, 'post')
 // 获得歌单的收藏者
@@ -41,6 +41,8 @@ export const reqSendComment = (obj, time) => ajax(BASE + '/comment?timestamp=' +
 
 // 我的云盘信息
 export const reqCloud = () => ajax(BASE + '/user/cloud', 'post')
+// 我创建的歌单
+export const reqUserList = (uid) => ajax(BASE + '/user/playlist', { uid }, 'post')
 // 个人信息
 export const reqUserDetail = (uid) => ajax(BASE + '/user/detail', { uid }, 'post')
 // 签到

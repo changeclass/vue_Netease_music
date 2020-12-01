@@ -24,7 +24,7 @@ import {
   Row,
   Col,
   List,
-
+  Submenu,
   Drawer,
   Spin,
   Tag,
@@ -66,5 +66,6 @@ Vue.component('Tabs', Tabs)
 Vue.component('TabPane', TabPane)
 Vue.component('Time', Time)
 Vue.component('Page', Page)
+Vue.component('Submenu', Submenu)
 Vue.prototype.$Message = Message
 Vue.prototype.$Spin = Spin

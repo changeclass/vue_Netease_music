@@ -8,6 +8,8 @@
       @play="onPlay"
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
+      @ended="ended"
+      autoplay
     ></audio>
     <div class="left_party">
       <router-link :to="{ name: 'music', params: { audio: $refs.audio } }"
@@ -168,16 +170,14 @@ export default {
     index: async function (newIndex, oldIndex) {
       // 将索引保存在VUEX中
       this.$store.commit('setIndex', newIndex)
-      this.music.url = ''
+      // this.music.url = ''
       const date = new Date()
       const result = await reqMusicUrl(this.musicObj.id, date.getTime())
-      console.log(result)
       // 将请求结果保存在vuex中
       this.$store.commit('setMusicObj', result)
       this.music.play = false
       const { url } = result.data[0]
       this.music.url = url
-      this.test()
     }
 
   },
@@ -190,9 +190,6 @@ export default {
     // 隐藏滑块的提示
     hideFormat () {
       return null
-    },
-    test () {
-      console.log('test')
     },
     formatSecond (second = 0) {
       return realFormatSecond(second)
@@ -233,6 +230,10 @@ export default {
     onPause () {
       this.music.play = false
     },
+    // 歌曲播放完成后
+    ended () {
+      this.index++
+    },
     // 当timeupdate事件大概每秒一次，用来更新音频流的当前播放时间
     onTimeupdate (res) {
       this.music.currentTime = res.target.currentTime
@@ -253,6 +254,7 @@ export default {
     // 歌单双击改变当前播放的音乐
     changeIndex (item, index) {
       this.index = index
+      console.log(item)
     }
   }
 }
