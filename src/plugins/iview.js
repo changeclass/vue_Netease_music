@@ -32,7 +32,8 @@ import {
   Tabs,
   TabPane,
   Time,
-  Page
+  Page,
+  Scroll
 } from 'view-design'
 Vue.component('Button', Button)
 Vue.component('Table', Table)
@@ -67,5 +68,6 @@ Vue.component('TabPane', TabPane)
 Vue.component('Time', Time)
 Vue.component('Page', Page)
 Vue.component('Submenu', Submenu)
+Vue.component('Scroll', Scroll)
 Vue.prototype.$Message = Message
 Vue.prototype.$Spin = Spin

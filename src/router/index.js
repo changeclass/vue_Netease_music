@@ -53,10 +53,19 @@ const routes = [
           }
         ]
       },
+      // 视频
       {
-        path: '/home/artist',
-        name: 'Artist',
-        component: () => import(/* webpackChunkName: "home" */ '../views/home/artist.vue')
+        path: '/home/video',
+        name: 'Video',
+        redirect: '/home/video/home',
+        component: () => import(/* webpackChunkName: "home" */ '../views/home/video.vue'),
+        children: [
+          {
+            path: '/home/video/home',
+            name: 'VideoHome',
+            component: () => import(/* webpackChunkName: "video" */ '../views/home/video/video-home.vue')
+          }
+        ]
       },
       {
         path: '/home/list/:id',

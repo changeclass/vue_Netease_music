@@ -39,6 +39,12 @@ export const reqCommentLike = (obj) => ajax(BASE + '/comment/like', obj, 'post')
 // 发表评论
 export const reqSendComment = (obj, time) => ajax(BASE + '/comment?timestamp=' + time, obj, 'post')
 
+// 获取视频tag
+export const reqGetVideoTag = () => ajax(BASE + '/video/group/list', 'post')
+
+// 根据tag获取视频
+export const reqGetVideo = (id, offset, time) => ajax(BASE + '/video/group?timestamp=' + time, { id, offset }, 'post')
+
 // 我的云盘信息
 export const reqCloud = () => ajax(BASE + '/user/cloud', 'post')
 // 我创建的歌单
